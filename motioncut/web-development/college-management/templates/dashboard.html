@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>Welcome, {{ user_role }}!</h1>
+    <p>Your Class Schedule:</p>
+    <table border="1">
+        <tr>
+            <th>Day/Time</th>
+            <th>8:00 AM</th>
+            <th>9:00 AM</th>
+            <th>10:00 AM</th>
+            <!-- Add more time slots as needed -->
+        </tr>
+        {% for day, schedule in schedules.items() %}
+        <tr>
+            <td>{{ day }}</td>
+            <td>{{ schedule.get('8:00 AM', '') }}</td>
+            <td>{{ schedule.get('9:00 AM', '') }}</td>
+            <td>{{ schedule.get('10:00 AM', '') }}</td>
+            <!-- Add more time slots as needed -->
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

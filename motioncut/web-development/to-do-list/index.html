@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #todo-container {
+            width: 300px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .task {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .task input[type="text"] {
+            border: none;
+            outline: none;
+            width: 70%;
+        }
+
+        .task button {
+            background-color: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .task button.complete {
+            background-color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+
+<div id="todo-container">
+    <h2>To-Do List</h2>
+    <ul id="task-list"></ul>
+    <input type="text" id="new-task" placeholder="Add a new task">
+    <button onclick="addTask()">Add Task</button>
+</div>
+
+<script>
+    // Retrieve tasks from local storage or initialize an empty array
+    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+    // Function to render tasks on the page
+    function renderTasks() {
+        const taskList = document.getElementById('task-list');
+        taskList.innerHTML = '';
+
+        tasks.forEach((task, index) => {
+            const taskItem = document.createElement('li');
+            taskItem.className = 'task';
+            taskItem.innerHTML = `
+                <input type="text" value="${task.text}" onchange="editTask(${index}, this.value)">
+                <button onclick="deleteTask(${index})">Delete</button>
+                <button class="complete" onclick="toggleComplete(${index})">${task.completed ? 'Uncomplete' : 'Complete'}</button>
+            `;
+            taskList.appendChild(taskItem);
+        });
+
+        // Save tasks to local storage
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
+
+    // Function to add a new task
+    function addTask() {
+        const newTaskInput = document.getElementById('new-task');
+        const text = newTaskInput.value.trim();
+
+        if (text !== '') {
+            tasks.push({ text, completed: false });
+            newTaskInput.value = '';
+            renderTasks();
+        }
+    }
+
+    // Function to edit a task
+    function editTask(index, newText) {
+        tasks[index].text = newText;
+        renderTasks();
+    }
+
+    // Function to delete a task
+    function deleteTask(index) {
+        tasks.splice(index, 1);
+        renderTasks();
+    }
+
+    // Function to toggle task completion status
+    function toggleComplete(index) {
+        tasks[index].completed = !tasks[index].completed;
+        renderTasks();
+    }
+
+    // Initial render
+    renderTasks();
+</script>
+
+</body>
+</html>
